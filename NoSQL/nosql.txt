@@ -1,0 +1,34 @@
+// Bearbeitet mit Hannes Herbert Schwanzer
+// 1)
+// Welche Unicorns (name und gender) sind vor 1980 geboren?
+db.unicorns.find({dob: {$lt: ISODate("1980-01-01")}}, {name:true, gender:true})
+
+// Wieviele Unicorns lieben Äpfel (appel)?
+db.unicorns.count({loves: {$in : ['apple']}})
+
+// Wieviele Unicorns lieben NUR Äpfel (appel)?
+db.unicorns.count({loves: ['apple']})
+
+// Was ist das durchschnittliche Gewicht aller weiblichen unicorns?
+db.unicorns.aggregate([{$match: {gender:'f'}}, {$group: {_id:"$gender", durchschnittsgewicht:{$avg:"$weight"}}}])
+
+// Welche Unicorns haben ein o im Namen?
+db.unicorns.find({name:/o/})
+
+// Geben Sie die Namen von allen Weibchen, welche Äpfel oder Karotte mögen, aus. Sortiert nach Gewicht.
+db.unicorns.find({gender:'f', $or: [{loves:'apple'}, {loves:'carrot'}]}, {name:true})
+
+// Welche Unicorns haben bis jetzt noch keine Vampire getötet, sortiert nach Geschlecht.
+db.unicorns.find({vampires: {$exists:false}}).sort({gender: 1})
+
+// Welche Männchen haben ein Gewicht zwischen 600 und 900?
+db.unicorns.find({weight:{$gt:600, $lt:900}, gender:'m'})
+
+
+
+// 2)
+// Es ist Corona-Zeit. Erhöhen Sie das Gewicht aller Unicorns um 10.
+db.unicorns.updateMany({},{$inc: {weight:10}})
+
+// Alle männlichen lieben jetzt zusätzlich Chocolade und die Anzahl der getöteten Vampire reduziert sich um 10
+db.unicorns.updateMany({}, {$inc: {vampires:-2}, $push: {loves: 'Chocolade'}})image.png
